@@ -1,6 +1,15 @@
-#ifndef MYLIB_H_INCLUDED
-#define MYLIB_H_INCLUDED
+#pragma once
+#include <string>
+#include <vector>
+#include <ostream>
 
+int getInt(int min, int max);
+std::string getFile();
 
+std::vector<std::string> readManual();
+std::vector<std::string> readFile(const std::string& failas);
 
-#endif // MYLIB_H_INCLUDED
+std::string hash(const std::string& in);
+std::vector<std::string> hashAll(const std::vector<std::string>& in);
+
+void printRez(std::ostream& out, const std::vector<std::string>& in, const std::vector<std::string>& hashes);

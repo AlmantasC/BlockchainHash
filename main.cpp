@@ -1,26 +1,54 @@
+#include "mylib.h"
 #include <iostream>
+#include <fstream>
 #include <string>
-#include <cstdint>
+#include <vector>
+#include <exception>
 #include <windows.h>
-#include <iomanip>
+
 int main()
 {
     SetConsoleOutputCP(65001);
     SetConsoleCP(65001);
 
-    std::string in;
-    std::getline(std::cin, in);
+    try {
+        // Pasirinkimai
+        std::cout << "[1] - Įvedimas ranka\n[2] - Skaitymas iš failo\nPasirinkimas: ";
+        int ivedimas = getInt(1, 2);
 
-    uint64_t a[4] = { 1, 2, 3, 4 };
-    uint64_t b[4] = {
-        0x9e3779b97f4a7c15ULL, 0xbf58476d1ce4e5b9ULL,
-        0x94d049bb133111ebULL, 0x100000001b3ULL
-    };
-    for (unsigned char c : in)
-        for (int i=0; i<4; ++i)
-            a[i]=a[i]*b[i]+c;
+        std::cout << "[1] - Išvedimas į ekraną\n[2] - Išvedimas į failą\nPasirinkimas: ";
+        int isvedimas = getInt(1, 2);
 
-    std::ostringstream os;
-    for (uint64_t v : a) os<<std::hex<<std::setw(16)<<std::setfill('0')<<v;
-    std::cout<<os.str();
+        // Įvedimas
+        std::vector<std::string> A;
+        if (ivedimas == 1) {
+            A = readManual();
+        } else {
+            std::string failas = getFile();
+            A = readFile(failas);
+        }
+
+        // Skaičiavimas
+        std::vector<std::string> H = hashAll(A);
+
+        // Išvedimas
+        switch (isvedimas) {
+            case 1: {
+                printRez(std::cout, A, H);
+                break;
+            }
+            case 2: {
+                std::ofstream fout("isvedimas.txt");
+                printRez(fout, A, H);
+                fout.close();
+                std::cout << "Rezultatai įrašyti į isvedimas.txt\n";
+                break;
+            }
+        }
+    }
+    catch (const std::exception& e) {
+        std::cout << "Klaida: " << e.what() << '\n';
+        return 1;
+    }
+    return 0;
 }
