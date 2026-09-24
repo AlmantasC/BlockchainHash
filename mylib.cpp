@@ -96,5 +96,5 @@ void printRez(std::ostream& out, const std::vector<std::string>& in, const std::
         return;
     }
     for (size_t i=0; i<in.size(); ++i)
-        out << hashes[i] << "  " << in[i] << '\n';
+        out << hashes[i] << "  " << in[i] << " " << in[i].size() << '\n';
 }

@@ -13,10 +13,10 @@ int main()
 
     try {
         // Pasirinkimai
-        std::cout << "[1] - Įvedimas ranka\n[2] - Skaitymas iš failo\nPasirinkimas: ";
+        std::cout << "Pasirinkite įvedimo būdą:\n[1] - Įvedimas ranka\n[2] - Skaitymas iš failo\nPasirinkimas: ";
         int ivedimas = getInt(1, 2);
 
-        std::cout << "[1] - Išvedimas į ekraną\n[2] - Išvedimas į failą\nPasirinkimas: ";
+        std::cout << "\nPasirinkite išvedimo būdą:\n[1] - Išvedimas į ekraną\n[2] - Išvedimas į failą\nPasirinkimas: ";
         int isvedimas = getInt(1, 2);
 
         // Įvedimas
