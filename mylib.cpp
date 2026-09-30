@@ -89,18 +89,71 @@ namespace {
     }
 }
 
+namespace {
+    inline uint64_t rotl(uint64_t x, int r) { return (x << r) | (x >> (64 - r)); }
+
+    constexpr int ROT[4] = {13, 29, 41, 53};
+
+    inline void mixLanes(uint64_t a[4]) {
+        for (int i = 0; i < 4; ++i)
+            a[i] += rotl(a[(i + 1) & 3], ROT[i]);
+    }
+
+    inline uint64_t load64(const unsigned char* p) {
+        return  static_cast<uint64_t>(p[0])        | static_cast<uint64_t>(p[1]) << 8  |
+                static_cast<uint64_t>(p[2]) << 16  | static_cast<uint64_t>(p[3]) << 24 |
+                static_cast<uint64_t>(p[4]) << 32  | static_cast<uint64_t>(p[5]) << 40 |
+                static_cast<uint64_t>(p[6]) << 48  | static_cast<uint64_t>(p[7]) << 56;
+    }
+
+    inline uint64_t loadTail(const unsigned char* p, size_t n) {
+        uint64_t w = 0;
+        for (size_t i = 0; i < n; ++i)
+            w |= static_cast<uint64_t>(p[i]) << (8 * i);
+        return w;
+    }
+
+    inline void absorb(uint64_t a[4], const uint64_t b[4], uint64_t w) {
+        for (int i = 0; i < 4; ++i) {
+            a[i] = (a[i] + w) * b[i];
+            a[i] ^= a[i] >> 32;
+        }
+        mixLanes(a);
+    }
+}
+
 std::string hash(const std::string& in) {
     const Params& p = params();
     uint64_t a[4] = {p.a[0], p.a[1], p.a[2], p.a[3]};
     const uint64_t* b = p.b;
 
-    for (unsigned char c : in)
-        for (int i=0; i<4; ++i)
-            a[i]=a[i]*c*b[i];
+    const unsigned char* d = reinterpret_cast<const unsigned char*>(in.data());
+    const size_t n = in.size();
 
-    std::ostringstream os;
-    for (uint64_t v : a) os<<std::hex<<std::setw(16)<<std::setfill('0')<<v;
-    return os.str();
+    size_t i = 0;
+    for (; i + 8 <= n; i += 8)
+        absorb(a, b, load64(d + i));
+    if (i < n)
+        absorb(a, b, loadTail(d + i, n - i));
+
+    const uint64_t len = static_cast<uint64_t>(n);
+    for (int k = 0; k < 4; ++k)
+        a[k] += len * b[k];
+    for (int r = 0; r < 4; ++r) {
+        for (int k = 0; k < 4; ++k) {
+            a[k] ^= a[k] >> 29;
+            a[k] *= b[k];
+            a[k] ^= a[k] >> 32;
+        }
+        mixLanes(a);
+    }
+
+    static const char HEX[] = "0123456789abcdef";
+    std::string out(64, '0');
+    for (int k = 0; k < 4; ++k)
+        for (int j = 0; j < 16; ++j)
+            out[k * 16 + j] = HEX[(a[k] >> (60 - 4 * j)) & 0xF];
+    return out;
 }
 
 std::string readFileBytes(const std::string& failas) {
