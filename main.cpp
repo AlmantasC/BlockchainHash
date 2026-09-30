@@ -1,4 +1,5 @@
 #include "mylib.h"
+#include "tests.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -13,8 +14,15 @@ int main()
 
     try {
         // Pasirinkimai
-        std::cout << "Pasirinkite įvedimo būdą:\n[1] - Įvedimas ranka\n[2] - Skaitymas iš failo\nPasirinkimas: ";
-        int ivedimas = getInt(1, 2);
+        std::cout << "Pasirinkite įvedimo būdą:\n[1] - Įvedimas ranka\n[2] - Skaitymas iš failo\n[3] - Testai (eksperimentai)\nPasirinkimas: ";
+        int ivedimas = getInt(1, 3);
+
+        if (ivedimas == 3) {
+            std::cout << "\nKurį eksperimentą paleisti?\n[0] - Visus\n[1-7] - Pasirinktą eksperimentą\nPasirinkimas: ";
+            int exp = getInt(0, 7);
+            runTests(exp == 0 ? "all" : std::to_string(exp));
+            return 0;
+        }
 
         std::cout << "\nPasirinkite išvedimo būdą:\n[1] - Išvedimas į ekraną\n[2] - Išvedimas į failą\nPasirinkimas: ";
         int isvedimas = getInt(1, 2);

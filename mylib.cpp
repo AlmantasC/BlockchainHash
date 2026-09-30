@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <iomanip>
 #include <stdexcept>
+#include <random>
 
 int getInt(int min, int max) {
     int value;
@@ -66,12 +67,32 @@ std::vector<std::string> readFile(const std::string& failas) {
     return A;
 }
 
-std::string hash(const std::string& in) {
-    uint64_t a[4] = {1,2,3,4};
-    uint64_t b[4] = {
-        0x9e3779b97f4a7c15ULL, 0xbf58476d1ce4e5b9ULL,
-        0x94d049bb133111ebULL, 0x100000001b3ULL
+namespace {
+    constexpr uint64_t SETUP_SEED = 0x5EED0F1A5C0DE001ULL;
+
+    struct Params {
+        uint64_t a[4];
+        uint64_t b[4];
     };
+
+    Params makeParams() {
+        std::mt19937_64 gen(SETUP_SEED);
+        Params p;
+        for (int i = 0; i < 4; ++i) p.a[i] = gen() | 1ULL;
+        for (int i = 0; i < 4; ++i) p.b[i] = gen() | 1ULL;
+        return p;
+    }
+
+    const Params& params() {
+        static const Params p = makeParams();
+        return p;
+    }
+}
+
+std::string hash(const std::string& in) {
+    const Params& p = params();
+    uint64_t a[4] = {p.a[0], p.a[1], p.a[2], p.a[3]};
+    const uint64_t* b = p.b;
 
     for (unsigned char c : in)
         for (int i=0; i<4; ++i)
@@ -80,6 +101,17 @@ std::string hash(const std::string& in) {
     std::ostringstream os;
     for (uint64_t v : a) os<<std::hex<<std::setw(16)<<std::setfill('0')<<v;
     return os.str();
+}
+
+std::string readFileBytes(const std::string& failas) {
+    std::ifstream fin(failas, std::ios::binary);
+    if (!fin.is_open())
+        throw std::runtime_error("Nepavyko atidaryti failo \"" + failas + "\"");
+    std::ostringstream ss;
+    ss << fin.rdbuf();
+    if (fin.bad())
+        throw std::runtime_error("Klaida skaitant failą \"" + failas + "\"");
+    return ss.str();
 }
 
 std::vector<std::string> hashAll(const std::vector<std::string>& in) {

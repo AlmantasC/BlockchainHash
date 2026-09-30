@@ -8,6 +8,7 @@ std::string getFile();
 
 std::vector<std::string> readManual();
 std::vector<std::string> readFile(const std::string& failas);
+std::string readFileBytes(const std::string& failas);
 
 std::string hash(const std::string& in);
 std::vector<std::string> hashAll(const std::vector<std::string>& in);
