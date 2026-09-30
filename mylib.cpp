@@ -8,6 +8,7 @@
 #include <iomanip>
 #include <stdexcept>
 #include <random>
+#include <utility>
 
 int getInt(int min, int max) {
     int value;
@@ -100,7 +101,15 @@ std::string hash(const std::string& in) {
 
     std::ostringstream os;
     for (uint64_t v : a) os<<std::hex<<std::setw(16)<<std::setfill('0')<<v;
-    return os.str();
+    std::string h = os.str();
+
+    std::mt19937_64 gen(a[0]);
+    for (size_t i = 0, j = h.size(); i + 1 < j; ++i) {
+        --j;
+        if (gen() >> 63)
+            std::swap(h[i], h[j]);
+    }
+    return h;
 }
 
 std::string readFileBytes(const std::string& failas) {
