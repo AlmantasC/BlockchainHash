@@ -96,7 +96,7 @@ std::string hash(const std::string& in) {
 
     for (unsigned char c : in)
         for (int i=0; i<4; ++i)
-            a[i]=(a[i]+c)*b[i];
+            a[i]=a[i]*c*b[i];
 
     std::ostringstream os;
     for (uint64_t v : a) os<<std::hex<<std::setw(16)<<std::setfill('0')<<v;
