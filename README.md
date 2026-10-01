@@ -332,4 +332,3 @@ Tikslinė įvestis `3234`; kandidatų rinkinys `0000`–`9999` (10 000 bandymų)
 ## 10. Šaltiniai
 - cppreference.com
 - Vilniaus universitetas, Blokų grandinių technologijos, 1 užduotis „Sukurk savo maišos generatorių“ (2026) ir kontrolinis sąrašas.
-- C++ standartas: `std::mt19937_64`, `std::seed_seq` (<random>).
