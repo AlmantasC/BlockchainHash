@@ -1,0 +1,124 @@
+=== 1 eksperimentas: įvestys (failai iš tests/) ===
+failas                            baitai    simboliai(UTF-8)
+abc.txt                           3         3
+bac.txt                           3         3
+cba.txt                           3         3
+empty.txt                         0         0
+one_a.txt                         1         1
+one_b.txt                         1         1
+repeat_a20.txt                    20        20
+repeat_a21.txt                    21        21
+rnd_10000.txt                     10000     10000
+rnd_10000_mod_end.txt             10000     10000
+rnd_10000_mod_mid.txt             10000     10000
+rnd_10000_mod_start.txt           10000     10000
+rnd_1500.txt                      1500      1500
+rnd_1500_mod_end.txt              1500      1500
+rnd_1500_mod_mid.txt              1500      1500
+rnd_1500_mod_start.txt            1500      1500
+rnd_3000.txt                      3000      3000
+rnd_3000_mod_end.txt              3000      3000
+rnd_3000_mod_mid.txt              3000      3000
+rnd_3000_mod_start.txt            3000      3000
+text.txt                          7         7
+text_crlf.txt                     9         9
+text_lead_space.txt               8         8
+text_lower.txt                    7         7
+text_nl.txt                       8         8
+text_trail_space.txt              8         8
+utf8_lt.txt                       38        27
+zero_byte_a.txt                   2         2
+zero_byte_b.txt                   2         2
+
+Vieno baito pakeitimų patikra:
+  rnd_10000_mod_end.txt            skirtingų baitų: 1  OK
+  rnd_10000_mod_mid.txt            skirtingų baitų: 1  OK
+  rnd_10000_mod_start.txt          skirtingų baitų: 1  OK
+  rnd_1500_mod_end.txt             skirtingų baitų: 1  OK
+  rnd_1500_mod_mid.txt             skirtingų baitų: 1  OK
+  rnd_1500_mod_start.txt           skirtingų baitų: 1  OK
+  rnd_3000_mod_end.txt             skirtingų baitų: 1  OK
+  rnd_3000_mod_mid.txt             skirtingų baitų: 1  OK
+  rnd_3000_mod_start.txt           skirtingų baitų: 1  OK
+
+=== 2 eksperimentas: išvesties formatas ===
+failas                            ilgis   hex     ranka==failas
+abc.txt                           64      OK      OK
+bac.txt                           64      OK      OK
+cba.txt                           64      OK      OK
+empty.txt                         64      OK      OK
+one_a.txt                         64      OK      OK
+one_b.txt                         64      OK      OK
+repeat_a20.txt                    64      OK      OK
+repeat_a21.txt                    64      OK      OK
+rnd_10000.txt                     64      OK      OK
+rnd_10000_mod_end.txt             64      OK      OK
+rnd_10000_mod_mid.txt             64      OK      OK
+rnd_10000_mod_start.txt           64      OK      OK
+rnd_1500.txt                      64      OK      OK
+rnd_1500_mod_end.txt              64      OK      OK
+rnd_1500_mod_mid.txt              64      OK      OK
+rnd_1500_mod_start.txt            64      OK      OK
+rnd_3000.txt                      64      OK      OK
+rnd_3000_mod_end.txt              64      OK      OK
+rnd_3000_mod_mid.txt              64      OK      OK
+rnd_3000_mod_start.txt            64      OK      OK
+text.txt                          64      OK      OK
+text_crlf.txt                     64      OK      n/a (yra eilučių pabaigų)
+text_lead_space.txt               64      OK      OK
+text_lower.txt                    64      OK      OK
+text_nl.txt                       64      OK      n/a (yra eilučių pabaigų)
+text_trail_space.txt              64      OK      OK
+utf8_lt.txt                       64      OK      OK
+zero_byte_a.txt                   64      OK      OK
+zero_byte_b.txt                   64      OK      OK
+Visi testai praėjo
+
+=== 3 eksperimentas: determinizmas (A, B, A) ===
+Kvietimų A,B,A neatitikimų nėra
+Hash sąrašas įrašytas į determinism_run.txt. Paleisk programą dar kartą ir palygink su ankstesniu failu (pvz. diff).
+
+=== 4 eksperimentas: sparta (tests/konstitucija.txt) ===
+eilutes baitai    vid. ns       min ns        max ns
+1       70        5014          4974          5217
+2       123       5715          5706          5732
+4       205       6818          6809          6830
+8       362       9031          8868          9313
+16      996       18147         17594         19518
+32      1841      30554         29663         31959
+64      3712      56165         55684         57213
+128     9155      131805        131138        132347
+256     20409     289647        288549        291887
+512     47434     692165        665414        756873
+789     75595     1101001       1088878       1130311
+Matavimai: std::chrono::steady_clock, ns / vieną hash() kvietimą, 3 apšilimo ir 7 matavimų. Išsaugota efficiency.csv
+
+=== 5 eksperimentas: kolizijos (100000 porų kiekvienam ilgiui) ===
+ilgis 10   : porų kolizijų 0/100000, skirtingų maišų 200000 iš 200000 įvesčių, kolizinių grupių 0
+ilgis 100  : porų kolizijų 0/100000, skirtingų maišų 200000 iš 200000 įvesčių, kolizinių grupių 0
+ilgis 500  : porų kolizijų 0/100000, skirtingų maišų 200000 iš 200000 įvesčių, kolizinių grupių 0
+ilgis 1000 : porų kolizijų 0/100000, skirtingų maišų 200000 iš 200000 įvesčių, kolizinių grupių 0
+
+Struktūruoti atvejai:
+  'abcdef' permutacijos: 720 skirtingų įvesčių -> 720 skirtingų maišų
+  "ab" vs "ba": skiriasi
+  "a\0" vs "b\0": skiriasi
+  "" vs "\0": skiriasi
+  "aa" vs "aaa": skiriasi
+
+=== 6 eksperimentas: lavinos efektas (100000 porų) ===
+ilgis  bitai % (min/max/vid)       hex % (min/max/vid)
+10     37.11 / 63.28 / 50.13       78.12 / 100.00 / 93.89
+100    37.11 / 62.50 / 50.02       78.12 / 100.00 / 93.81
+500    36.33 / 61.72 / 49.96       78.12 / 100.00 / 93.73
+1000   35.94 / 62.89 / 50.01       75.00 / 100.00 / 93.80
+Iš viso: bitai 35.94 / 63.28 / 50.03 (orientyras ~50), hex 75.00 / 100.00 / 93.81 (orientyras ~93.75)
+Išsaugota avalanche_raw.csv ir avalanche_hist.csv (histogramai braižomi iš jų)
+
+=== 7 eksperimentas: spėjimas ir druska ===
+be druskos      : bandymų 10000, laikas 57.65 ms, sutampančių kandidatų 1 [3234 ]
+  (taikinys buvo 3234; sutapimas neįrodo įvesties - kolizijos galimos, bet kandidatų rinkinyje jis identifikuoja, jei sutapimas vienintelis)
+druska (16 baitų, raw, hex užrašas): e68e9c6b819b6b426c35778f527e8dbf
+su vieša druska : bandymų 10000, laikas 63.97 ms, sutampančių kandidatų 1 [3234 ]
+Lentelė be druskos: 10000 įrašų, taikinys rastas taip; druskuotas taikinys šioje lentelėje rastas ne (kitai druskai reikia naujo pilno perrinkimo)
+3 dalis (slaptas r): aptarkite README - kodu tikrinti nereikia.
