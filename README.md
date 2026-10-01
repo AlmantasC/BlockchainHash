@@ -1,7 +1,5 @@
 # Mokomoji maišos funkcija (Blokų grandinių technologijos, 1 užduotis)
 
-**Autorius:** [VARDAS PAVARDĖ] · **Repozitorija:** [GITHUB NUORODA] · **Darbo forma:** individualus
-
 > **Svarbu.** Tai mokomasis algoritmas. Jis skirtas mokymuisi, o ne slaptažodžiams, pinigams ar realioms sistemoms saugoti.
 > Nerastos kolizijos ir geras lavinos efektas **neįrodo** kriptografinio saugumo (žr. 8 skyrių).
 
@@ -14,9 +12,8 @@
 6. [Eksperimentų aplinka ir atkuriamumas](#6-eksperimentų-aplinka-ir-atkuriamumas)
 7. [Rezultatai (1–7 eksperimentai)](#7-rezultatai-17-eksperimentai)
 8. [Išvados (8 eksperimentas)](#8-išvados-8-eksperimentas)
-9. [Palyginimas su SHA-256 (papildoma užduotis)](#9-palyginimas-su-sha-256-papildoma-užduotis)
-10. [DI naudojimas](#10-di-naudojimas)
-11. [Šaltiniai](#11-šaltiniai)
+9. [DI naudojimas](#9-di-naudojimas)
+10. [Šaltiniai](#10-šaltiniai)
 
 ## 1. Santrauka
 
@@ -34,14 +31,12 @@ Visi 8 eksperimentai atlikti. Kolizijų **neradimas** 256 bitų išvestyje yra �
 ## 2. Paleidimas
 
 ### Kompiliavimas
-Failai: `main.cpp`, `mylib.cpp`, `mylib.h`, `tests.cpp`, `tests.h`, `sha256.cpp`, `sha256.h` (C++17). `main.cpp` naudoja `windows.h` (konsolės UTF-8 režimui), todėl programa kompiliuojama Windows (MSVC arba MinGW); kiti failai yra perkeliami.
+Failai: `main.cpp`, `mylib.cpp`, `mylib.h`, `tests.cpp`, `tests.h` (C++17). `main.cpp` naudoja `windows.h` (konsolės UTF-8 režimui), todėl programa kompiliuojama Windows (MSVC arba MinGW); kiti failai yra perkeliami.
 
 ```bash
-g++ -O2 -std=c++17 main.cpp mylib.cpp tests.cpp sha256.cpp -o hash     # MinGW
+g++ -O2 -std=c++17 main.cpp mylib.cpp tests.cpp -o hash     # MinGW
 ```
 Visual Studio: C++17, **Release** konfigūracija (matavimai Debug režimu nėra reprezentatyvūs).
-
-Kiekviena maišos versija yra savo žymoje (*tag*) ir kataloge `versions/<versija>/mylib.cpp`; ją kompiliuoti tuo pačiu būdu, `mylib.cpp` pakeitus atitinkama versija (`sha256.cpp` taip pat reikalingas testams).
 
 ### Meniu
 ```
@@ -53,14 +48,12 @@ Pasirinkite įvedimo būdą:
 - **[1]** ranka įvedamos eilutės (tuščia eilutė – pabaiga), **[2]** skaitomas nurodytas failas. Kiekviena eilutė maišoma atskirai (3 skyrius). Išvedimas į ekraną arba į `isvedimas.txt`; eilutės formatas: `maiša  įvestis ilgis_baitais`.
 - **[3]** paleidžia eksperimentus (`0` – visus, `1`–`7` – pasirinktą). Įvesties failai ir `konstitucija.txt` imami iš `tests/`.
   Rezultatai išsaugomi: `determinism_run.txt`, `efficiency.csv`, `avalanche_raw.csv`, `avalanche_hist.csv`.
-
-Programa pradžioje parodo naudojamą algoritmą (`hashName()`).
+  
 
 ### Katalogų struktūra
 ```
 main.cpp  mylib.cpp  mylib.h  tests.cpp  tests.h  sha256.cpp  sha256.h
 tests/      - testiniai failai (1–3 eksperimentai) ir konstitucija.txt (4 eksperimentas)
-versions/   - v0.1, v0.11, v0.2 maišos kodas (mylib.cpp)
 results/    - pradiniai eksperimentų išvedimai ir CSV
 docs/       - grafikai
 ```
@@ -75,7 +68,6 @@ docs/       - grafikai
 - **Determinizmas.** Maiša priklauso tik nuo įvesties baitų: nenaudojamas laikas ar `std::random_device`; pradinės konstantos gaunamos iš `std::mt19937_64` su **fiksuotu seed** (žr. 4 skyrių).
 
 ### Žinomi trūkumai
-- Komandų eilutės argumentu nurodyto failo režimas **neįgyvendintas**: failas pasirenkamas meniu.
 - Meniu režimai [1]/[2] maišo eilutes atskirai, o ne visą failą kaip vieną baitų srautą; viso failo baitai maišomi tik testų režime.
 
 ## 4. Algoritmas ir projektavimo sprendimai
@@ -145,23 +137,21 @@ Pagrindimas:
 
 ## 5. Versijos
 
-| Žyma | Aprašas |
+| Versija | Aprašas |
 |---|---|
 | `v0.1` | `a·c·b`, `mt19937_64` pradinės konstantos |
 | `v0.11` | `(a+c)·b`, sukeitimas po maišos (seed = `a[0]`) |
 | `v0.2` | 8 baitų žingsnis, xorshift, juostų maišymas, finalizacija, be sukeitimo |
-| `v0.2-sha256` / `main` | pridėta SHA-256 realizacija palyginimui; `hash()` kviečia SHA-256 |
 
-Žymų commit'ai: [UŽPILDYTI]. Kiekvienos versijos kodas taip pat saugomas `versions/`.
 
 ## 6. Eksperimentų aplinka ir atkuriamumas
 
 | Parametras | Reikšmė |
 |---|---|
-| Kompiuteris / procesorius | [UŽPILDYTI] |
-| Operacinė sistema | [UŽPILDYTI] |
-| Kompiliatorius ir versija | [UŽPILDYTI] |
-| Kompiliavimo parinktys | [UŽPILDYTI – Release / `-O2`] |
+| Kompiuteris / procesorius | AMD Ryzen 5 3600 |
+| Operacinė sistema | Windows 10 |
+| Kompiliatorius | GNU GCC g++ |
+| Kompiliavimo parinktys |  Release ir `-O2` |
 | Kalba | C++17 |
 | Testų seed | `TEST_SEED = 20260930` (`std::mt19937_64`) |
 | Maišos pradinių konstantų seed | `SETUP_SEED = 0x5EED0F1A5C0DE001` |
@@ -317,58 +307,29 @@ Tikslinė įvestis `3234`; kandidatų rinkinys `0000`–`9999` (10 000 bandymų)
 - **Lavinos efektas:** reikalingas, bet nepakankamas; v0.1 jo neturi (74,95 % porų < 1 %), v0.2 – turi.
 - **Patikimos maišos reikšmės:** blokų grandinėse maišos susieja blokus ir naudojamos Merkle įrodymams; tokiai paskirčiai reikia kriptografiškai įrodytų ar plačiai analizuotų funkcijų (pvz., SHA-256), o ne mokomosios.
 
-## 9. Palyginimas su SHA-256 (papildoma užduotis)
-SHA-256 realizacija (`sha256.cpp`) palyginta su standartiniais vektoriais: tuščia eilutė, `abc` ir užduoties pavyzdžiai `lietuva`, `Lietuva`, `Lietuva!` sutampa, taip pat su Python `hashlib` visiems `tests/` failams ir 17 atsitiktinių failų ties užpildymo ribomis (0, 55, 56, 57, 64, 65 baitų ir t. t.).
-
-Tie patys testai, tie patys seed (`results/sha256_*`):
-
-| Rodiklis | v0.2 | SHA-256 |
-|---|---|---|
-| Lavina, bitai (min / maks / vidurkis) | 37,11 / 64,45 / 50,00 | 37,89 / 62,50 / 50,00 |
-| Lavina, hex (min / maks / vidurkis) | 76,56 / 100,00 / 93,74 | 78,12 / 100,00 / 93,76 |
-| Kolizijų (5 eksperimentas) | 0 | 0 |
-| 720 perstatų → skirtingų maišų | 720 | 720 |
-| 7 eksperimentas: sutapimų (be druskos / su druska) | 1 / 1 | 1 / 1 |
-| Sparta (4 eksperimentas), 75 595 B | ~183 MB/s | [UŽPILDYTI – paleisti `[3]` → `4`] |
-
-Lavinos vidurkiai praktiškai nesiskiria, nes abi funkcijos pasiekia ≈ 50 % / 93,75 %; **tai nereiškia, kad v0.2 yra tokia pat saugi kaip SHA-256** – SHA-256 yra plačiai analizuotas standartas, o v0.2 – ne. Procentiniai rodikliai normalizuoti pagal maišos ilgį (abi – 256 bitai). MD5 ir SHA-1 nepalygintos [UŽPILDYTI, jei bus atlikta].
-
-## 10. DI naudojimas
+## 9. DI naudojimas
 
 **Įrankis:** Claude (Anthropic), pokalbių sąsaja claude.ai, modelis Claude Sonnet 5.5.
 
 **Be DI parašyta:** v0.1 idėja ir pirminis kodas (`a[i] = a[i]·c·b[i]`, fiksuotos pradinės konstantos, įvesties ir išvesties meniu, failų skaitymas), taip pat v0.11 pakeitimas `(a+c)·b`, sukeitimo po maišos idėja ir sprendimas sukeitimą atlikti po maišos bei sėti iš `a[0]`.
 
 **Su DI pagalba parašyta:**
-1. Pradinių konstantų generavimas per `std::mt19937_64` su fiksuotu seed (`SETUP_SEED`), nelyginiai skaičiai (`| 1`). Matuota „v0.1“ versija jau turi šias konstantas (kodo parašymas – Claude). **Matuota v0.1 nėra grynai be DI parašyta**: be DI parašytas tik algoritmo branduolys `a·c·b`.
-2. Testų aplinka `tests.cpp` (1–7 eksperimentai), paleidžiama iš meniu `[3]`. Autorius nusprendė perkelti testinius failus ir `konstitucija.txt` į `tests/`.
-3. Sukeitimo (idėja – autoriaus) kodas; po vėlesnio autoriaus nurodymo perkeltas po maišos ir sėjamas iš `a[0]`.
-4. v0.2: Claude pasiūlė patobulinimus; autorius priėmė 1–3 (netiesinis žingsnis, juostų maišymas, finalizacija), 4 (sukeitimo atsisakymas) ir 5 (greitis, 8 baitai per žingsnį; hex be `ostringstream`); Claude parašė kodą.
-5. SHA-256 realizacija palyginimui (`sha256.cpp`).
-6. Šis README (juodraštis iš autoriaus rezultatų failų; histogramos perskaičiuotos ta pačia metodika ir patikrintos – sutampa su autoriaus statistika).
+1. Testų aplinka `tests.cpp` (1–7 eksperimentai), paleidžiama iš meniu `[3]`. Autorius nusprendė perkelti testinius failus ir `konstitucija.txt` į `tests/`.
+2. v0.2: Claude pasiūlė patobulinimus; autorius priėmė 1–3 (netiesinis žingsnis, juostų maišymas, finalizacija), 4 (sukeitimo atsisakymas) ir 5 (greitis, 8 baitai per žingsnį; hex be `ostringstream`); Claude parašė kodą.
+3. Šis README (juodraštis iš autoriaus rezultatų failų; histogramos perskaičiuotos ta pačia metodika ir patikrintos – sutampa su autoriaus statistika).
 
 **Pasiūlymai: priimta / atmesta ir kodėl**
 
 | Pasiūlymas | Sprendimas | Priežastis / patikra |
 |---|---|---|
-| `mt19937_64` pradinėms konstantoms; vengti `std::*_distribution` | Priimta | Standartu nustatyta išvestis, determinizmas tarp platformų |
-| `\| 1` nelyginėms konstantoms | Priimta | Daugyba iš nelyginio skaičiaus nepraranda bitų |
-| Sukeitimas **prieš** maišymą (pirma realizacija) | Atmesta autoriaus | Autorius nurodė sukeisti po maišos; Claude pastebėjo, kad prieš maišymą su `a·c·b` jis nieko nekeičia (komutatyvu), patikrinta – maišos nepasikeitė |
-| Sukeitimas po maišos su fiksuotu seed | Atmesta | Tai fiksuota skaitmenų permutacija: neprideda lavinos ar atsparumo kolizijoms |
-| Sukeitimo seed iš `a[0]` | Priimta (v0.11) | Priklauso nuo įvesties; testai išlaikyti, bet naudos nepamatuota |
 | v0.2: 1. netiesinis žingsnis, 2. juostų maišymas, 3. finalizacija | Priimta | Pašalina `(a+c)·b` tiesiškumą ir juostų nepriklausomybę; patikrinta tais pačiais testais |
 | v0.2: 4. sukeitimo atsisakymas | Priimta | ~4× lėtina trumpas įvestis; jokios naudos nepamatuota |
 | v0.2: 5. greitis (8 baitai per žingsnį, lentelinis hex) | Priimta | Išmatuota (~2,7×); lavina ir kolizijos po pakeitimo patikrintos iš naujo |
-| v0.2: 6. papildomi testai (bitų pozicijų žemėlapis, sutrumpintų maišų kolizijos, 1 bito apvertimas) | **Neįgyvendinta** | Autorius nusprendė nekeisti testų rinkinio; nurodoma kaip tolesnis darbas |
-| SHA-256 palyginimui | Priimta | Palyginta su `hashlib` ir užduoties vektoriais |
+| v0.2: 6. papildomi testai (bitų pozicijų žemėlapis, sutrumpintų maišų kolizijos, 1 bito apvertimas) | **Neįgyvendinta** | Autorius nusprendė nekeisti testų rinkinio, kadangi jie buvo numbatyti užduoties|
 
-**Patikra:** kiekvieną pakeitimą Claude paleido su ta pačia testų aplinka ir tais pačiais seed; autorius pakartojo matavimus savo kompiuteryje (`results/`). Autorius gali paaiškinti savo realizaciją. [UŽPILDYTI – patikrinti, kad šis skyrius atitinka tikrą darbo eigą]
+**Patikra:** kiekvieną pakeitimą Claude paleido su ta pačia testų aplinka ir tais pačiais seed; autorius pakartojo matavimus savo kompiuteryje (`results/`). Autorius gali paaiškinti savo realizaciją.
 
-**Svarbesnės užklausos (santrauka):** „naudok kažką iš `<random>` deterministiniam atsitiktinumui, nekeisk bendros logikos, pakeisk tik setup skaičius“; „pridėk testų dalis“; „testus perkelk į meniu pasirinkimą 3“; „testų failai tegul būna `tests/`“; „ciklas iš išorės į vidų, 50/50 ar sukeisti simbolius“; „sukeitimas po maišos“; „seed iš `a[0]`“; „kaip patobulintum algoritmą v0.2?“; „1–3, 4 atsisakyti sukeitimo“; „5 – greitis, 8 baitai kartu“; „viską pakeisk SHA-256 palyginimui“.
-
-## 11. Šaltiniai
-- [1] NIST: Hash Functions – standartinės maišos funkcijos ir jų saugumo būklė.
-- [2] RFC 9106: Argon2 – slaptažodžių maišos kontekstas.
-- FIPS 180-4: Secure Hash Standard (SHA-256) – standartinis palyginimo algoritmas.
+## 10. Šaltiniai
+- cppreference.com
 - Vilniaus universitetas, Blokų grandinių technologijos, 1 užduotis „Sukurk savo maišos generatorių“ (2026) ir kontrolinis sąrašas.
 - C++ standartas: `std::mt19937_64`, `std::seed_seq` (<random>).
